@@ -1,13 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 
 import './index.css';
 import App from './components/App';
 import rootReducer from './reducers';
 
+//Curried form of function logger(obj, next, action)
+// const logger = function({dispatch , getState}){
+//   return function(next){
+//     return function(action){
+//       //middleware code
+//       console.log('ACTION_TYPE = ', action.type);
+//       next(action);
+//     }
+//   }
+// }
+//Curried form of logger function using arrow function chain
+const logger = ({dispatch , getState}) => (next) => (action) =>{
+    console.log('ACTION_TYPE = ', action.type);
+    next(action);
+}
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 console.log('store', store);
 // console.log('Before State', store.getState());
 
