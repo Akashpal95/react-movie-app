@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 
 import './index.css';
-import App from './components/App';
+import AppWrapper from './components/App';
 import rootReducer from './reducers';
 
 //Curried form of function logger(obj, next, action)
@@ -17,30 +18,44 @@ import rootReducer from './reducers';
 //   }
 // }
 //Curried form of logger function using arrow function chain
+//Middleware will already have dispatch and getstate
 const logger = ({dispatch , getState}) => (next) => (action) =>{
-    console.log('ACTION_TYPE = ', action.type);
+    if(typeof action !== 'function'){
+      console.log('ACTION_TYPE = ', action.type);
+    }
     next(action);
 }
 
-const store = createStore(rootReducer, applyMiddleware(logger));
+// const thunk = ({ dispatch, getState }) => (next) => (action) => {
+
+//   if(typeof action === 'function'){
+//     action(dispatch);
+//     return;
+//   }
+//   next(action);
+// }
+
+const store = createStore(rootReducer, applyMiddleware(logger, thunk));
 console.log('store', store);
-// console.log('Before State', store.getState());
 
-// store.dispatch({
-//   type:'ADD_MOVIES',
-//   movies: [{name : 'Superman'}]
-// });
+export const StoreContext = createContext();
 
-// store.dispatch({
-//   type:'ADD_MOVIES',
-//   movies: [{name : 'Batman'}]
-// });
+class Provider extends React.Component {
+  render() {
+    const { store} = this.props;
+    return (
+      <StoreContext.Provider value ={store}>
+        {this.props.children}
+      </StoreContext.Provider>
+    );
+  }
+}
 
-// console.log('After State', store.getState());
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App store={store}/>
-  </React.StrictMode>,
+  <Provider store = {store}>
+    {/* <App store={store}/> */}
+    <AppWrapper />
+  </Provider>,
   document.getElementById('root')
 );
