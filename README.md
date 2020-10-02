@@ -1,6 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description:
+  This is a simple dashboard to search movies from the OMDb API and create your own list of movies.
+  You can also select your favourites from the list.
+  The dashboard comes pre-loaded with a few of my favourite movies.
+  I have hosted this project in firebase and hopefully i'll get to introduce authorisation and make your movie list persistent!!!
 
-This project is hosted at :
+Till then checkout this project here :
 ## https://react-movie-app-84fee.firebaseapp.com/
 
 ## Available Scripts
